@@ -7,6 +7,7 @@
 <%	
 	PurchaseVO purchasevo = (PurchaseVO)request.getAttribute("purchasevo"); 
 	
+
 	System.out.println("Purchasevo ÂïÈü´Ï±î"+purchasevo);
 %>
 
