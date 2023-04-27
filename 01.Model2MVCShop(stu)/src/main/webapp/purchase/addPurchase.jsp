@@ -6,9 +6,8 @@
 
 <%	
 	PurchaseVO purchasevo = (PurchaseVO)request.getAttribute("purchasevo"); 
-	
-
 	System.out.println("Purchasevo 찍힙니까"+purchasevo);
+	
 %>
 
 <html>
@@ -18,7 +17,7 @@
 
 <body>
 
-<form name="addPurchase" action="/updatePurchaseView.do?tranNo=0" method="post">
+<form name="updatePurchase" action="/updatePurchaseView.do?tranNo=0" method="post">
 
 
 다음과 같이 구매가 되었습니다.
@@ -71,6 +70,7 @@
 		<td><%=purchasevo.getDivyRequest() %></td>
 		<td></td>
 	</tr>
+	
 	<tr>
 		<td>배송희망일자</td>
 		<td><%=purchasevo.getDivyDate() %></td>

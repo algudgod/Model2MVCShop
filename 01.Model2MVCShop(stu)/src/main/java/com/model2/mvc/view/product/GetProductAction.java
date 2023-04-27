@@ -20,7 +20,7 @@ public class GetProductAction extends Action {
 		ProductService productService = new ProductServiceImpl();
 		ProductVO productVO = productService.getProduct(prodNo);
 		
-		System.out.println("제발 값아 나와줘 제발~~~~~~~~~~!!:"+productVO);
+		System.out.println("menu=search, getProductAction:"+productVO);
 		request.setAttribute("prodvo", productVO);
 		
 		return "forward:/product/readProduct.jsp";

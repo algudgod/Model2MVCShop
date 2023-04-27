@@ -7,11 +7,10 @@
 <%	
 	UserVO uservo = (UserVO)session.getAttribute("user");
 	ProductVO productvo = (ProductVO)request.getAttribute("productvo");
-	PurchaseVO purchasevo = (PurchaseVO)request.getAttribute("purchasevo"); 
 	
 	System.out.println("Uservo ÂïÈü´Ï±î"+uservo);
 	System.out.println("Productvo ÂïÈü´Ï±î"+productvo);
-	System.out.println("Purchasevo ÂïÈü´Ï±î"+purchasevo);
+
 %>
 	
 	
