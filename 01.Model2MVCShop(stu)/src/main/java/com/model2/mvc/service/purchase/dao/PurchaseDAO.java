@@ -14,10 +14,7 @@ import com.model2.mvc.service.purchase.vo.PurchaseVO;
 import com.model2.mvc.service.user.dao.UserDAO;
 import com.model2.mvc.service.user.vo.UserVO;
 
-/**
- * @author algud
- *
- */
+
 public class PurchaseDAO {
 	
 	//Method
@@ -32,9 +29,9 @@ public class PurchaseDAO {
 //			PreparedStatement pstmt = con.prepareStatement(sql);
 			
 			Connection con = DBUtil.getConnection();
-			PreparedStatement pstmt = con.prepareStatement("INSERT INTO transaction"
-					+ "VALUES(seq_transaction_tran_no.nextval,?,?,?,?,?,?,?,?,sysdate");
-			
+			PreparedStatement pstmt = con.prepareStatement("INSERT INTO transaction "
+					+ "VALUES(seq_transaction_tran_no.nextval,?,?,?,?,?,?,?,?,?,sysdate)");
+			                 
 			pstmt.setInt(1, purchaseVO.getPurchaseProd().getProdNo());
 			pstmt.setString(2, purchaseVO.getBuyer().getUserId());
 			pstmt.setString(3, purchaseVO.getPaymentOption());
@@ -127,52 +124,65 @@ public class PurchaseDAO {
 	 executeQuery(String sql)는 조회문을 실행할 목적으로 사용한다.
 	*/
 	
-	
-	
-	
-//		
-//		rs.last();
-//		int total = rs.getRow();
-//		System.out.println("로우의 수:" + total);
-//
-//		HashMap<String,Object> map = new HashMap<String,Object>();
-//		map.put("count", new Integer(total));
-//
-//		rs.absolute(searchVO.getPage() * searchVO.getPageUnit() - searchVO.getPageUnit()+1);
-//		System.out.println("searchVO.getPage():" + searchVO.getPage());
-//		System.out.println("searchVO.getPageUnit():" + searchVO.getPageUnit());
-//		
-//		ArrayList<PurchaseVO> list = new ArrayList<PurchaseVO>();
-//		if (total > 0) {
-//			for (int i = 0; i < searchVO.getPageUnit(); i++) {
-//				
-//				PurchaseVO purchaseVO = new PurchaseVO();
-//				UserVO userVO = new UserVO();
-//				ProductVO productVO = new ProductVO();
-//				
-//				purchaseVO.setPurchaseProd(productVO);
-//				purchaseVO.setBuyer(userVO);
-//				purchaseVO.setPaymentOption(rs.getString("PAYMENT_OPTION"));
-//				purchaseVO.setReceiverName(rs.getString("RECEIVER_NAME"));
-//				purchaseVO.setReceiverPhone(rs.getString("RECEIVER_PHONE"));
-//				purchaseVO.setDivyAddr(rs.getString("DLVY_ADDR"));
-//				purchaseVO.setDivyRequest(rs.getString("DLVY_REQUEST"));
-//				purchaseVO.setTranCode(rs.getString("TRAN_STATUS_CODE"));
-//				purchaseVO.setOrderDate(rs.getDate("ORDER_DATA"));
-//				purchaseVO.setDivyDate(rs.getString("DLVY_DATE"));;
-//				
-//				list.add(purchaseVO);
-//				if (!rs.next())
-//					break;
-//						
-//			}
-//		}
-//		System.out.println("list.size() : " + list.size());
-//		map.put("list", list);
-//		System.out.println("map().size() : "+ map.size());
-//
-//		con.close();
-//			
-//		return map;
-//	}
+
+	public HashMap<String, Object> getPurchaseList(SearchVO searchVO) throws Exception {
+		
+		Connection con = DBUtil.getConnection();
+		
+		String sql = "";
+		if (searchVO.getSearchCondition() != null) {
+			if(searchVO.getSearchCondition().equals("0")) {
+				sql += "where PROD_NO LIKE '%" + searchVO.getSearchKeyword() + "%'";
+			} else if (searchVO.getSearchCondition().equals("1")) {
+				sql += "where PROD_NAME LIKE '%" + searchVO.getSearchKeyword() + "%'";				
+			} else if (searchVO.getSearchCondition().equals("2")) {
+				sql += "where PRICE LIKE '%" + searchVO.getSearchKeyword() + "%'";
+			}
+		}	
+		
+		PreparedStatement pstmt = con.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE,
+															ResultSet.CONCUR_UPDATABLE);
+		System.out.println(sql);
+		ResultSet rs = pstmt.executeQuery();
+		
+		rs.last();
+		int total = rs.getRow();
+		System.out.println("로우의 수:" + total);
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("count", new Integer(total));
+
+		rs.absolute(searchVO.getPage() * searchVO.getPageUnit() - searchVO.getPageUnit()+1);
+		System.out.println("searchVO.getPage():" + searchVO.getPage());
+		System.out.println("searchVO.getPageUnit():" + searchVO.getPageUnit());
+		
+		ArrayList<PurchaseVO> list = new ArrayList<PurchaseVO>();	
+		if(total != 0) {
+			for(int i=0; i<searchVO.getPageUnit();i++) {
+				PurchaseVO pvo = new PurchaseVO();
+				pvo.setTranNo(rs.getInt("TRAN_NO"));
+				pvo.setPurchaseProd(new ProductDAO().findProduct(rs.getInt("PROD_NO")));
+				pvo.setBuyer(new UserDAO().findUser(rs.getString("BUYER_ID")));
+				pvo.setPaymentOption(rs.getString("PAYMENT_OPTION"));
+				pvo.setReceiverName(rs.getString("RECEIVER_NAME"));   
+				pvo.setReceiverPhone(rs.getString("RECEIVER_PHONE"));
+				pvo.setDivyAddr(rs.getString("DEMAILADDR"));
+				pvo.setDivyRequest(rs.getString("DLVY_REQUEST"));
+				pvo.setTranCode(rs.getString("TRAN_STATUS_CODE"));
+				pvo.setOrderDate(rs.getDate("ORDER_DATA"));
+				pvo.setDivyDate(rs.getString("DLVY_DATE"));
+				list.add(pvo);
+				if(!rs.next()) 
+					break;
+				}
+			}
+		
+		System.out.println("list.size() : " + list.size());
+		map.put("list", list);
+		System.out.println("map().size() : "+ map.size());
+
+		con.close();
+			
+		return map;
+	}
 }

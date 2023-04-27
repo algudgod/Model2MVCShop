@@ -62,10 +62,10 @@ function fncGetProductList(){
 					<td width="93%" class="ct_ttl01">
 					
 					<% if(menu.equals("manage")) {%>
-					惑前 包府
+					惑前 包府(manage)
 					
 					<%}else {%>
-					惑前格废炼雀
+					惑前格废炼雀(search)
 					<% } %>
 										
 					</td>

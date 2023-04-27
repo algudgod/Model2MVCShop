@@ -19,31 +19,27 @@ public class AddPurchaseAction extends Action {
 	public String execute(	HttpServletRequest request,
 									HttpServletResponse response) throws Exception {
 		
-
-		ProductService productService = new ProductServiceImpl();
-		
-		HttpSession session = request.getSession();
-		
-		
 		int prodNo = Integer.parseInt(request.getParameter("prodNo"));
-		ProductVO productVO = productService.getProduct(prodNo);
 		
+		ProductService productService = new ProductServiceImpl();
+		ProductVO productVO = productService.getProduct(prodNo);		
 		System.out.println("prodNo야 잘 넘어왔니?"+prodNo);
+			
 		
-		UserVO userVO = (UserVO)session.getAttribute("uservo");
-		
-		System.out.println();
+		HttpSession session = request.getSession();		
+		UserVO userVO = (UserVO)session.getAttribute("user");		
+		System.out.println("너는 뭐를 가지고 와야하지?"+userVO);
 		
 		PurchaseVO purchaseVO = new PurchaseVO();
 		
 		purchaseVO.setPurchaseProd(productVO);
-		purchaseVO.setBuyer(userVO);
-		
+		purchaseVO.setBuyer(userVO);		
 		purchaseVO.setPaymentOption(request.getParameter("paymentOption"));
 		purchaseVO.setReceiverName(request.getParameter("receiverName"));
 		purchaseVO.setReceiverPhone(request.getParameter("receiverPhone"));
 		purchaseVO.setDivyAddr(request.getParameter("receiverAddr"));
 		purchaseVO.setDivyRequest(request.getParameter("receiverRequest"));
+		purchaseVO.setTranCode("0");
 		purchaseVO.setDivyDate(request.getParameter("receiverDate"));
 		
 
@@ -54,13 +50,10 @@ public class AddPurchaseAction extends Action {
 		PurchaseService purchaseService=new PurchaseServiceImpl();
 		purchaseService.addPurchase(purchaseVO);
 		
-		request.setAttribute("productvo", productVO);
+		//request.setAttribute("productvo", productVO);
 		request.setAttribute("purchasevo", purchaseVO);
 		return "forward:/purchase/addPurchase.jsp";
-		
-		
-		
-		
+			
 				
 	}
 }

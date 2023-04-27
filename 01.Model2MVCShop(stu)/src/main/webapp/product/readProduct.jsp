@@ -1,9 +1,12 @@
 <%@ page contentType="text/html; charset=euc-kr" %>
-
+<%@ page import="com.model2.mvc.service.user.vo.*" %>
 <%@ page import="com.model2.mvc.service.product.vo.*" %>
 
 <% ProductVO productvo = (ProductVO)request.getAttribute("prodvo"); %>
 <% String menu = request.getParameter("menu"); %>
+
+<% String role = ((UserVO)session.getAttribute("user")).getRole();
+   System.out.println("role= " + role); %>
 
 <html>
 <head>
@@ -120,52 +123,60 @@
 </table>
 
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"	style="margin-top:10px;">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0"	style="margin-top: 10px;">
 	<tr>
 		<td width="53%"></td>
 		<td align="right">
-			<table border="0" cellspacing="0" cellpadding="0">
-				<tr>
-	
-	
-				
-					<td width="17" height="23">
-						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
-					</td>
-					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-					<% if(menu.equals("search")){%>
-						<a href="/addPurchaseView.do?prodNo=<%= productvo.getProdNo() %>">구매</a>
-					<% }else{%>
-						<a href="/listProduct.do?prodNo=<%= productvo.getProdNo() %>">확인</a>
-					<% } %>
-					
-					</td>
-					<td width="14" height="23">
-						<img src="/images/ct_btnbg03.gif" width="14" height="23">
-					</td>
-					<td width="30"></td>
-				
 
-					
-					
-	
-	
-					
-					<td width="30"></td>					
-					<td width="17" height="23">
-						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
-					</td>
-					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-						<a href="javascript:history.go(-1);">이전</a>
-					</td>
-					<td width="14" height="23">
-						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
-					</td>
-				</tr>
-			</table>
+		<table border="0" cellspacing="0" cellpadding="0">
+		
+
+		
+			<tr>
+			<%if(role.equals("user")) {%>
+				<td width="17" height="23">
+					<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
+				</td>
+				<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
+					<a href="/addPurchaseView.do?prod_no=<%=productvo.getProdNo()%>">구매</a>
+				</td>
+				<td width="14" height="23">
+					<img src="/images/ct_btnbg03.gif" width="14" height="23">
+				</td>
+				<td width="30"></td>
+		
+				<td width="17" height="23">
+					<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
+				</td>
+				<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
+					<a href="javascript:history.go(-1)">이전</a>
+				</td>
+				<td width="14" height="23">
+					<img src="/images/ct_btnbg03.gif" width="14" height="23">
+				</td>
+				
+			<%} else {%>
+				<td width="30"></td>
+				<td width="17" height="23">
+					<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
+				</td>
+				<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
+					<a href="javascript:history.go(-1)">확인</a>
+				</td>
+				<td width="14" height="23">
+					<img src="/images/ct_btnbg03.gif" width="14" height="23">
+				</td>
+			<%} %>
+		
+				
+			</tr>
+		</table>
+
 		</td>
 	</tr>
 </table>
+</form>
 
 </body>
 </html>
